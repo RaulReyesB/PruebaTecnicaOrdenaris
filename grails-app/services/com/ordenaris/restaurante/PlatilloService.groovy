@@ -40,7 +40,7 @@ class PlatilloService {
             ]
         }
     }
-    def nuevoPlatillo(nombre, descripcion, disponibles, costo, tipoMenu, fechaDisponible ){
+    def nuevoPlatillo(nombre, descripcion, disponibles, costo, tipoMenu, fechaDisponible, status ){
         try{
             if(fechaDisponible != null){
             def fecha = "T00:15:43Z"
@@ -58,7 +58,7 @@ class PlatilloService {
         if( disponibles == null){
             disponibles = -1
         }
-            def nuevoP = new Platillo([nombre:nombre, descripcion: descripcion, platillosDisponibles:disponibles, costo:costo, tipoMenu:tipoMenu, fechaDisponible:fechaDisponible]).save(flush:true, failOnError:true)
+            def nuevoP = new Platillo([nombre:nombre, descripcion: descripcion, platillosDisponibles:disponibles, costo:costo, tipoMenu:tipoMenu, fechaDisponible:fechaDisponible, status: status]).save(flush:true, failOnError:true)
         return [
             resp:[success: true, data: nuevoP.uuid],
             status: 201
@@ -118,14 +118,13 @@ class PlatilloService {
         }
         if(descripcion){
         platilloId.descripcion = descripcion
-
         }
         if(costo){
         platilloId.costo = costo
         }
         if(disponibles != null){
             if(platilloId.platillosDisponibles){
-            println platilloId.platillosDisponibles
+            //println platilloId.platillosDisponibles
             if( !platilloId.platillosDisponibles.toString().soloNumeros()) {
                 return respond([success:false, mensaje: "Platillos Disponibles debe tener solo numeros"], status: 400)
             }
@@ -143,8 +142,8 @@ class PlatilloService {
         }
         
         def respuesta = platilloId.save()
-        println "------------------"
-        println respuesta
+        //println "------------------"
+        //println respuesta
         
         return [
             resp:[success: true, respuesta:respuesta ],

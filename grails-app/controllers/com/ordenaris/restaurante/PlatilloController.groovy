@@ -73,7 +73,12 @@ class PlatilloController {
         if( data.descripcion.size() > 100 ) {
             return respond([success:false, mensaje: "La descripcion no puede exceder el limite de 100 caracteres"], status: 400)
         }
-        def respuesta = PlatilloService.nuevoPlatillo(data.nombre, data.descripcion, data?.disponibles, data.costo, data.tipoMenu, data.fechaDisponible)
+        if( !data.fechaDisponible){
+            request.status = 1
+        }else{
+            request.status = 0
+        }
+        def respuesta = PlatilloService.nuevoPlatillo(data.nombre, data.descripcion, data?.disponibles, data.costo, data.tipoMenu, data.fechaDisponible, request.status)
         //println respuesta
         return respond( respuesta.resp, status: respuesta.status)
     }
@@ -88,7 +93,7 @@ class PlatilloController {
 
     def editarPlatillo(){
         def data = request.JSON
-        println data
+        //println data
         if( data.nombre.soloNumeros() ) {
             return respond([success:false, mensaje: "El nombre debe contener letras y no solo numeros"], status: 400)
         }
@@ -102,11 +107,11 @@ class PlatilloController {
             return respond([success:false, mensaje: "La descripcion no puede ser tan largo"], status: 400)
         }
         //println "-----"
-        if(!data.tipoMenu.soloNumeros() ) {
+        if( data.tipoMenu){
+            if(!data.tipoMenu.toString().soloNumeros() ) {
             return respond([success:false, mensaje: "El menuTipo debe tener solo numeros"], status: 400)
         }
-        
-        //println data
+        }
         def respuesta = PlatilloService.editarPlatillo(data.uuid, data?.nombre, data?.descripcion, data?.costo, data?.disponibles, data?.tipoMenu)
         return respond(respuesta.resp, status: respuesta.status)
     }
