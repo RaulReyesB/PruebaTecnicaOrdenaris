@@ -20,8 +20,9 @@ class PlatilloController {
     }
 
     def listaPlatillos(){
-        def respuesta = PlatilloService.listaPlatillos()
-        println respuesta
+        println "------------------"
+        println params.tipo
+        def respuesta = PlatilloService.listaPlatillos(params.tipo)
         return respond([
             success:true, data:respuesta], status: 200
         )

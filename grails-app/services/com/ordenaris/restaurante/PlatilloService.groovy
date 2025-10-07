@@ -14,11 +14,21 @@ class PlatilloService {
     ]
     return obj
     }
-    def listaPlatillos(){
+    def listaPlatillos(tipo){
         //Con este se trae toda la tabla sin excepcion de datos
         //def list = Platillo.list()
         try{
-        def list = Platillo.findAllByStatusNotEquals(2)
+        def list 
+        if(tipo){
+                def menu = TipoMenu.findById(tipo.toInteger())
+                println menu
+                list = Platillo.findAllByStatusNotEqualsAndTipoMenu(2, menu);
+                // println(list)
+            }else{
+                list = Platillo.findAllByStatusNotEquals(2);
+            }
+
+
         return list.collect{ platillo ->
         return mapPlatillo(platillo)
         }
