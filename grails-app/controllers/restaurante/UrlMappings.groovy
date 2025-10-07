@@ -25,6 +25,7 @@ class UrlMappings {
             group "/platillos", {
             get "/lista" (controller:"platillo", action:"listaPlatillos")
             post "/nuevoPlatillo" (controller:"platillo", action:"nuevoPlatillo")
+            get "/ver"(controller: "platillo", action: "paginarPlatillos")
             group "/$uuid", {
                 get "/info" (controller: "platillo", action:"verPlatillo")
                 patch "/editar" (controller: "platillo", action:"editarPlatillo")

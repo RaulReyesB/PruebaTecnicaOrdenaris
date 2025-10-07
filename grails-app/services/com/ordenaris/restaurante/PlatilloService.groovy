@@ -182,4 +182,32 @@ class PlatilloService {
             ]
         }
     }
+    def paginarPlatillos( pagina, columnaOrden, orden, max, estatus, query ){
+        try{
+            def offset = pagina * max - max
+            def list = Platillo.createCriteria().list{
+                if( estatus ) {
+                    eq("status", estatus)
+                }
+                ne("status", 2)
+                if( query ) {
+                    like("nombre", "%${query}%")
+                }
+                firstResult(offset)
+                maxResults(max)
+                order( columnaOrden, orden )
+                
+            }.collect{platillo -> mapPlatillo(platillo)}
+            return [
+                resp: [ success: true, data: list ],
+                status: 200
+            ]
+
+        }catch(e){
+            return [
+                resp: [ success: false, mensaje: e.getMessage() ],
+                status: 500
+            ]
+        }
+    }
 }

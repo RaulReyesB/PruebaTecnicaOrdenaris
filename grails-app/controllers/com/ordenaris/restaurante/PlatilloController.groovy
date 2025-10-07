@@ -126,4 +126,39 @@ class PlatilloController {
         def respuesta = PlatilloService.editarEstatusTipo(params.uuid, params.estatus)
         return respond(respuesta.resp, status: respuesta.status)
     }
+    def paginarPlatillos(){
+        if( !params.pagina ) {
+            return respond([success:false, mensaje: "La pagina no puede ir vacio"], status: 400)
+        }
+        if( !params.pagina.soloNumeros() ) {
+            return respond([success:false, mensaje: "La pagina debe contener solo numeros"], status: 400)
+        }
+        
+        if( !params.columnaOrden ) {
+            return respond([success:false, mensaje: "El columnaOrden no puede ir vacio"], status: 400)
+        }
+        if( !(params.columnaOrden in ["nombre", "status", "dateCreated"]) ) {
+            return respond([success:false, mensaje: "El columnaOrden solo puede ser: nombre, status, dateCreated"], status: 400)
+        }
+
+        if( !params.orden ) {
+            return respond([success:false, mensaje: "El orden no puede ir vacio"], status: 400)
+        }
+        if( !(params.orden in ["asc", "desc"]) ) {
+            return respond([success:false, mensaje: "El orden solo puede ser: asc, desc"], status: 400)
+        }
+
+        if( !params.max ) {
+            return respond([success:false, mensaje: "El max no puede ir vacio"], status: 400)
+        }
+        if( !params.max.soloNumeros() ) {
+            return respond([success:false, mensaje: "El max debe contener solo numeros"], status: 400)
+        }
+        if( !(params.max.toInteger() in [ 2, 5, 10, 20, 50, 100 ]) ) {
+            return respond([success:false, mensaje: "El max puede ser solo: 2, 5, 10, 20, 50, 100"], status: 400)
+        }
+        
+        def respuesta = PlatilloService.paginarPlatillos( params.pagina.toInteger(), params.columnaOrden, params.orden, params.max.toInteger(), params.estatus?.toInteger(), params.query )
+        return respond( respuesta.resp, status: respuesta.status )
+    }
 }
